@@ -29,7 +29,7 @@ class RequestParams
       date_response = date_parts.map { |part| time_parts[part] }.join("-") unless date_parts.empty?
       time_response = time_parts_keys.map { |part| time_parts[part] }.join(":") unless time_parts_keys.empty?
 
-      response_body = [date_response, time_response].reject(&:empty?).join(" ")
+      response_body = [date_response, time_response].reject(&:nil?).join(" ")
       [200, { "Content-Type" => "text/plain" }, [response_body]]
 
     else
@@ -42,12 +42,12 @@ class RequestParams
   def current_time_parts
     current_time = Time.now
     {
-      "year"   => current_time.year,
-      "month"  => current_time.month,
-      "day"    => current_time.day,
-      "hour"   => current_time.hour,
-      "minute" => current_time.min,
-      "second" => current_time.sec
+      "year"   => current_time.strftime("%Y"),
+      "month"  => current_time.strftime("%m"),
+      "day"    => current_time.strftime("%d"),
+      "hour"   => current_time.strftime("%H"),
+      "minute" => current_time.strftime("%M"),
+      "second" => current_time.strftime("%S")
     }
   end
 end
