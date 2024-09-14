@@ -1,22 +1,21 @@
+require_relative 'middleware/time_formatter'
+
 class App
-
   def call(env)
-    [status, headers, body]
-  end
+    req = Rack::Request.new(env)
+    format = req.params['format']
 
-  private
+    if req.path == "/time" && format
+      time_formatter = TimeFormatter.new(format)
 
+      time_formatter.response
+    else
+      res = Rack::Response.new
+      res.status = 404
+      res.header['Content-Type'] = 'text/plain'
+      res.write('Not Found')
 
-
-  def status
-    200
-  end
-
-  def headers
-    { 'Content-Type' => 'text/plain' }
-  end
-
-  def body
-    ["Welcome abroad2!\n"]
+      res.finish
+    end
   end
 end
