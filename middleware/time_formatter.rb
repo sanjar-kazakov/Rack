@@ -11,11 +11,21 @@ class TimeFormatter
   end
 
   def time
-    date_format = ORDERED_FORMATS.select { |part| @format.include?(part) && %w[year month day].include?(part) }
-                                 .map { |part| SUPPORTED_FORMATS[part] }.compact.join('-')
+    date_parts = []
+    time_parts = []
 
-    time_format = ORDERED_FORMATS.select { |part| @format.include?(part) && %w[hour minute second].include?(part) }
-                                 .map { |part| SUPPORTED_FORMATS[part] }.compact.join(':')
+    ORDERED_FORMATS.each do |part|
+      next unless @format.include?(part)
+
+      if %w[year month day].include?(part)
+        date_parts << SUPPORTED_FORMATS[part]
+      elsif %w[hour minute second].include?(part)
+        time_parts << SUPPORTED_FORMATS[part]
+      end
+    end
+
+    date_format = date_parts.join('-')
+    time_format = time_parts.join(':')
 
     format_string = [date_format, time_format].reject(&:nil?).join(' ')
 
@@ -26,4 +36,7 @@ class TimeFormatter
     @format - SUPPORTED_FORMATS.keys
   end
 
+  def valid?
+    unknown_formats.any?
+  end
 end

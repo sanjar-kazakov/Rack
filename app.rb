@@ -11,23 +11,22 @@ class App
 
   def build_response(path, format)
 
-
     if path == '/time' && format
       time_formatter = TimeFormatter.new(format)
 
-      if time_formatter.unknown_formats.any?
-        test_method(400, "Unknown time format [#{time_formatter.unknown_formats.join(', ')}]")
+      if time_formatter.valid?
+        send_response(400, "Unknown time format [#{time_formatter.unknown_formats.join(', ')}]")
       else
-        test_method(200, time_formatter.time)
+        send_response(200, time_formatter.time)
       end
     else
-      test_method(404, 'Not Found')
+      send_response(404, 'Not Found')
     end
 
 
   end
 
-  def test_method(status, body)
+  def send_response(status, body)
     response = Rack::Response.new
     response.status = status
     response.write(body)
