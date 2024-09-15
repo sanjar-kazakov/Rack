@@ -29,9 +29,9 @@ class App
 
   def test_method(status, body)
     response = Rack::Response.new
-      response.status = status
-      response.write(body)
-      response.headers['Content-Type'] = 'text/plain'
+    response.status = status
+    response.write(body)
+    response.headers['Content-Type'] = 'text/plain'
 
     response.finish
   end
